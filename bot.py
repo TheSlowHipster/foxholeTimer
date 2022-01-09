@@ -9,46 +9,46 @@ logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename='discord.log', encoding='UTF-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s'))
 
-with open(config.json) as f:
+with open("config.json") as f:
     config = json.load(f)
     f.close()
 
-description = ''' A timer to remind users after a set period of time.
+DESCRIPTION = ''' A timer to remind users after a set period of time.
 
 written by @TheSlowHipster https://github.com/TheSlowHipster
 '''
 
 intents = discord.Intents.default()
 
-bot = commands.Bot(command_prefix=config["prefix"], description=description, intents=intents)
+bot = commands.Bot(command_prefix=config["prefix"], description=DESCRIPTION, intents=intents)
 
-guild = None
-channel = None
+GUILD = None
+CHANNEL = None
 
 @bot.event
 async def on_ready():
     hasChannel = False
     for gui in bot.guilds:
-        for chan in tmp.channels:
+        for chan in gui.channels:
             if chan.name == config['channelName']:
-                channel = chan
+                CHANNEL = chan
                 hasChannel = True
                 break
         if hasChannel:
-            guild = gui
+            GUILD = gui
             break
 
 @tasks.loop(hours=48)
-async def timer(self):
-    if guild is None or channel is None:
+async def timer(self)
+    if GUILD is None or CHANNEL is None:
         print("No guild or channel")
         return
     await time.sleep(162000) # Sleep for 45 hours
-    await channel.send(f"<&@{config['roleID']}> stockpiles will expire in approximately 3 hours.")
+    await CHANNEL.send(f"<&@{config['roleID']}> stockpiles will expire in approximately 3 hours.")
     await time.sleep(3600)
-    await channel.send(f"<&@{config['roleID']}> stockpiles will expire in approximately 2 hours.")
+    await CHANNEL.send(f"<&@{config['roleID']}> stockpiles will expire in approximately 2 hours.")
     await time.sleep(3600)
-    await channel.send(f"<&@{config['roleID']}> stockpiles will expire inapproximately 1 hour."
+    await CHANNEL.send(f"<&@{config['roleID']}> stockpiles will expire inapproximately 1 hour."
             "This is your last reminder")
 
 
