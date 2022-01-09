@@ -22,33 +22,20 @@ intents = discord.Intents.default()
 
 bot = commands.Bot(command_prefix=config["prefix"], description=DESCRIPTION, intents=intents)
 
-GUILD = None
-CHANNEL = None
 
 @bot.event
 async def on_ready():
-    hasChannel = False
-    for gui in bot.guilds:
-        for chan in gui.channels:
-            if chan.name == config['channelName']:
-                CHANNEL = chan
-                hasChannel = True
-                break
-        if hasChannel:
-            GUILD = gui
-            break
+    print("ready")
+
 
 @tasks.loop(hours=48)
-async def timer(self)
-    if GUILD is None or CHANNEL is None:
-        print("No guild or channel")
-        return
+async def timer(ctx):
     await time.sleep(162000) # Sleep for 45 hours
-    await CHANNEL.send(f"<&@{config['roleID']}> stockpiles will expire in approximately 3 hours.")
+    await ctx.send(f"<&@{config['roleID']}> stockpiles will expire in approximately 3 hours.")
     await time.sleep(3600)
-    await CHANNEL.send(f"<&@{config['roleID']}> stockpiles will expire in approximately 2 hours.")
+    await ctx.send(f"<&@{config['roleID']}> stockpiles will expire in approximately 2 hours.")
     await time.sleep(3600)
-    await CHANNEL.send(f"<&@{config['roleID']}> stockpiles will expire inapproximately 1 hour."
+    await ctx.send(f"<&@{config['roleID']}> stockpiles will expire inapproximately 1 hour."
             "This is your last reminder")
 
 
@@ -57,7 +44,9 @@ async def timer(self)
 async def reset(ctx):
     if not timer.is_running():
         ctx.send(f"Thanks {ctx.author.name} for setting the timer!")
-        timer.start()
+        timer.start(ctx)
     else:
         ctx.send(f"Thanks {ctx.author.name} for re-setting the timer!")
-        timer.restart()
+        timer.restart(ctx)
+
+bot.run(config["token"])
